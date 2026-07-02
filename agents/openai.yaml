@@ -1,0 +1,7 @@
+interface:
+  display_name: "MBG Penerima Import"
+  short_description: "Generate penerima import files from profil MBG"
+  default_prompt: "Use $mbg-penerima-import to generate penerima import Excel files from a Profil Mitra SPPG workbook with unique 12-digit NISN values."
+
+policy:
+  allow_implicit_invocation: true
