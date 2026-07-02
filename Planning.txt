@@ -1,0 +1,50 @@
+# Rencana Pembuatan 52 File Excel Penerima
+
+## Summary
+Buat 52 file Excel dari data pada file **Profil mitra SPPG**, memakai format dari **template_import penerima**. Setiap file mengikuti jumlah penerima berdasarkan baris sumber: pria, wanita, guru/kader, dan tendik. Header baris 1 dan keterangan baris 2 pada template tidak boleh diubah; data mulai ditulis dari baris 3.
+
+## Key Changes
+- Baca sumber dari sheet Profil mitra SPPG:
+  - Kolom D: `Jenis Kelompok`
+  - Kolom E: bagian nama file
+  - Kolom I: `Nama Kelompok`
+  - Kolom J: jumlah pria
+  - Kolom K: jumlah wanita
+  - Kolom L: jumlah guru/kader
+  - Kolom M: jumlah tendik
+- Buat nama file dari gabungan nilai kolom D + kolom E, dibersihkan dari karakter yang tidak valid untuk nama file.
+- Generate isi template:
+  - Murid pria sebanyak kolom J, `Jenis Kelamin ID = 392`, `Posisi = 1`
+  - Murid wanita sebanyak kolom K, `Jenis Kelamin ID = 64`, `Posisi = 1`
+  - Guru/kader sebanyak kolom L, posisi `2`
+  - Tendik sebanyak kolom M, posisi `3`
+  - `Status Menerima = true`
+  - `NISN/NIK` dibuat random 10 digit, unik antar semua data yang dibuat, maksimal 20 karakter.
+- Generate nama Indonesia yang wajar:
+  - Nama murid pria dan wanita disesuaikan jenis kelamin.
+  - Nama guru/kader dan tendik menggunakan nama dewasa Indonesia.
+
+## Tanggal Lahir
+- Tanggal lahir dibuat wajar berdasarkan kategori:
+  - SD kelas 1-3: sekitar usia 6-9 tahun.
+  - SD kelas 4-6: sekitar usia 9-12 tahun.
+  - SMP: sekitar usia 12-15 tahun.
+  - SMA/SMK/MA: sekitar usia 15-18 tahun.
+  - PAUD/TK bila ada: sekitar usia 4-6 tahun.
+  - Guru/kader: sekitar usia 24-58 tahun.
+  - Tendik: sekitar usia 22-60 tahun.
+- Jenjang siswa akan ditentukan dari `Jenis Kelompok` atau `Nama Kelompok` bila mengandung petunjuk seperti PAUD, TK, SD, SMP, SMA, SMK, MA, kelas, atau istilah sejenis.
+- Tahun kabisat diperhatikan: tanggal lahir 29 Februari hanya dibuat pada tahun kabisat yang valid; tanggal invalid seperti 29 Februari pada tahun non-kabisat tidak akan muncul.
+
+## Test Plan
+- Verifikasi jumlah baris tiap file sama dengan total kolom J + K + L + M.
+- Verifikasi baris 1 dan 2 template tetap sama.
+- Verifikasi semua `NISN/NIK` unik dan panjangnya 10 digit.
+- Verifikasi `Jenis Kelamin ID`, `Posisi`, dan `Status Menerima` sesuai aturan.
+- Verifikasi tanggal lahir valid, termasuk aturan tahun kabisat.
+- Buka beberapa file sampel untuk memastikan format template tetap terbawa.
+
+## Assumptions
+- File yang akan diunggah berisi minimal dua sumber: **Profil mitra SPPG** dan **template_import penerima**, baik dalam satu workbook atau dua file terpisah.
+- Jika nama kolom template sedikit berbeda, isi akan dipetakan berdasarkan header yang paling cocok.
+- Jika jenjang tidak bisa dikenali dari nama kelompok, default siswa akan dibuat usia SD umum sekitar 7-12 tahun.
